@@ -4,37 +4,38 @@
  */
 package model;
 
+import java.util.HashMap;
+
 /**
  *
  * @author Yulianti Oenang
  */
 public class Barang {
-    private String KodeBarang;
-    private int Harga;
-    private int Restock;
-    public Barang(String kodebarang,int harga, int restock){
-        KodeBarang=kodebarang;
-        Harga=harga;
-        Restock=restock;
+    private static HashMap<String, Barang> barangLib = new HashMap<String, Barang>();
+    private String mBarangID;
+    private Integer mHarga;
+    private Integer mRestock;
+
+    public Barang(String barangID,Integer harga, Integer restock){
+        mBarangID = barangID;
+        mHarga = harga;
+        mRestock = restock;
     }
-    public String getKodeBarang(){
-        return KodeBarang;
-    };
-    public void setKodeBarang(String k){
-        KodeBarang=k;
-    };
-    public int getHarga(){
-        return Harga;
+
+    /* STATIC METHOD */
+    public static void addBarang(Barang barang) {
+        barangLib.put(barang.getBarangID(), barang);
     }
-    public void setHarga(int h){
-        Harga=h;
+    public static Barang getBarang(String key) {
+        return barangLib.get(key);
     }
-    public int getRestock(){
-        return Restock;
-    };
-    public void setRestock(int R)
-    {
-        Restock=R;
-    }
-    
+
+    /* GETTER and SETTER */
+    public String getBarangID() {   return mBarangID;   }
+    public Integer getHarga()   {   return mHarga;      }
+    public Integer getRestock() {   return mRestock;    }
+
+    public void setBarangID(String k)       {   mBarangID=k;        }
+    public void setHarga(Integer harga)     {   mHarga = harga;     }
+    public void setRestock(Integer restock) {   mRestock = restock; }
 }

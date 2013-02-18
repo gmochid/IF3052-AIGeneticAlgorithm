@@ -4,46 +4,46 @@
  */
 package model;
 
+import java.util.HashMap;
+
 /**
  *
  * @author Yulianti Oenang
  */
 public class Cewek {
-    private int Enlightenment;
-    private int EnergiHabis;
-    private int WaktuKetemuMax;
-    private String Prerequisit;
-    public Cewek(int enlightenment,int energihabis, int waktuketemumax, String kodepre){
-        Enlightenment=enlightenment;
-        EnergiHabis=energihabis;
-        WaktuKetemuMax=waktuketemumax;
-        Prerequisit=kodepre;
+    private static HashMap<Integer, Cewek> cewekLib = new HashMap<Integer, Cewek>();
+    private static Integer cewekTotal = 0;
+    private Integer mEnlightenment;
+    private Integer mEnergiHabis;
+    private Integer mWaktuMax;
+    private String mPrerequisiteID;
+    private Integer mCewekID;
+    public Cewek(Integer enlightenment,Integer energihabis, Integer waktumax, String prerequisiteID){
+        mEnlightenment = enlightenment;
+        mEnergiHabis = energihabis;
+        mWaktuMax = waktumax;
+        mPrerequisiteID = prerequisiteID;
+        mCewekID = ++cewekTotal;
     }
-    public int getEnlightenment(){
-        return Enlightenment;
+
+    /* STATIC METHOD */
+    public static Cewek getCewek(Integer key) {
+        return cewekLib.get(key);
     }
-    public void setEnglightenment(int e)
-    {
-        Enlightenment=e;
+    public static void addCewek(Cewek cewek) {
+        cewekLib.put(cewek.getCewekID(), cewek);
     }
-    public int getEnergiHabis(){
-        return EnergiHabis;
-    }
-    public void setEnergiHabis(int e){
-        EnergiHabis=e;
-    }
-    public int getWaktuKetemuMax(){
-        return WaktuKetemuMax;
-    }
-    public void setWaktuKetemuMax(int w){
-        WaktuKetemuMax=w;
-    }
-    public String getPrerequisit(){
-        return Prerequisit;
-    }
-    public void setPrerequisit(String p){
-        Prerequisit=p;
-    }
-            
-    
+
+    /* GETTER and SETTER */
+    public Barang getPrerequisite()     {   return Barang.getBarang(mPrerequisiteID);}
+    public Integer getCewekID()         {   return mCewekID;           }
+    public Integer getEnlightenment()   {   return mEnlightenment;     }
+    public Integer getEnergiHabis()     {   return mEnergiHabis;       }
+    public Integer getWaktuMax()        {   return mWaktuMax;          }
+    public String getPrerequisiteID()   {   return mPrerequisiteID;    }
+
+    public void setEnglightenment(Integer enlightment)  {   mEnlightenment = enlightment;   }
+    public void setEnergiHabis(Integer energiHabis)     {   mEnergiHabis = energiHabis;     }
+    public void setWaktuMax(Integer waktuMax)           {   mWaktuMax = waktuMax;           }
+    public void setPrerequisiteID(String prerequisiteID){   mPrerequisiteID = prerequisiteID;}
 }
