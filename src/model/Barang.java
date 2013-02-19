@@ -10,13 +10,14 @@ public class Barang {
     private static HashMap<Integer, Barang> barangLib = new HashMap<Integer, Barang>();
     private char mBarangID;
     private Integer mHarga;
-    private Integer mCurrentStock;
+    private Integer[] mCurrentStock;
     private Integer mRestock;
 
-    public Barang(char barangID,Integer harga, Integer restock){
+    public Barang(char barangID,Integer harga, Integer restock, Integer time){
         mBarangID = barangID;
         mHarga = harga;
         mRestock = restock;
+        mCurrentStock = new Integer[time];
     }
 
     /* STATIC METHOD */
@@ -35,13 +36,15 @@ public class Barang {
 
     /* METHOD */
     public void reset() {
-        mCurrentStock = mRestock;
+        for (int i = 0; i < mCurrentStock.length; i++) {
+            mCurrentStock[i] = mRestock;
+        }
     }
-    public Boolean isPurchaseable() {
-        return mCurrentStock > 0;
+    public Boolean isPurchaseable(Integer days) {
+        return mCurrentStock[days] > 0;
     }
-    public void purchased() {
-        mCurrentStock--;
+    public void purchased(Integer days) {
+        mCurrentStock[days]--;
     }
 
     /* GETTER and SETTER */

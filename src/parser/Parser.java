@@ -46,7 +46,7 @@ public class Parser {
         n = sc.nextInt();
         for (int i = 0; i < n; i++) {
             String s = sc.next();
-            Barang barang = new Barang(s.charAt(0), sc.nextInt(), sc.nextInt());
+            Barang barang = new Barang(s.charAt(0), sc.nextInt(), sc.nextInt(), Iboy.getActiveIboy().getWaktu());
             Barang.addBarang(barang);
         }
     }

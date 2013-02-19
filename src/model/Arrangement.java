@@ -27,10 +27,21 @@ public class Arrangement {
                 Integer cewekID = Integer.valueOf(mArrangement.substring(pos, pos));
                 if(cewekID == 0) {
                     mAvailable[i]++;
+                    builder.append('0');
                 } else {
-                    /* TODO */
+                    if(Iboy.getActiveIboy().isCewekDateable(cewekID, pos)) {
+                        Iboy.getActiveIboy().dateCewek(cewekID, pos);
+                        /*
+                         * TODO : Susun2 jadwal membeli barang
+                         */
+                        builder.append(cewekID);
+                    } else {
+                        mAvailable[i]++;
+                        builder.append('0');
+                    }
                 }
             }
+            Iboy.getActiveIboy().nextDay();
         }
         mArrangement = builder.toString();
         return 0;
