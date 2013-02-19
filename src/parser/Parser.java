@@ -16,6 +16,18 @@ import model.Iboy;
  * @author Yulianti Oenang
  */
 public class Parser {
+    public static void parseScheduleFile(String filename) {
+        FileInputStream fis = null;
+        try {
+             fis = new FileInputStream(filename);
+        } catch (FileNotFoundException ex) {
+        }
+        Scanner sc = new Scanner(fis);
+        for (int i = 0; i < Cewek.getTotalCewek(); i++) {
+            Cewek.getCewek(i).setJadwal(sc.next());
+        }
+    }
+
     public static void parseGeneralFile(String filename) {
         FileInputStream fis = null;
         try {
@@ -33,7 +45,8 @@ public class Parser {
         }
         n = sc.nextInt();
         for (int i = 0; i < n; i++) {
-            Barang barang = new Barang(sc.next(), sc.nextInt(), sc.nextInt());
+            String s = sc.next();
+            Barang barang = new Barang(s.charAt(0), sc.nextInt(), sc.nextInt());
             Barang.addBarang(barang);
         }
     }
