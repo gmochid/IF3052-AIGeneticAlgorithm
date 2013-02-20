@@ -52,7 +52,7 @@ public class Parser {
         n = sc.nextInt();
         for (int i = 0; i < n; i++) {
             String s = sc.next();
-            Barang barang = new Barang(s.charAt(0), sc.nextInt(), sc.nextInt(), Iboy.getActiveIboy().getWaktu());
+            Barang barang = new Barang(s.charAt(0), sc.nextInt(), sc.nextInt(), Iboy.getActiveIboy().getMinggu());
             Barang.addBarang(barang);
         }
         /*for (int i = 0; i < Barang.getTotalBarang(); i++) {

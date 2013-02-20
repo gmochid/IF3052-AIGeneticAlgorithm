@@ -10,17 +10,24 @@ public class Iboy {
     private static Iboy activeIboy;
     private Integer mModalUang;
     private Integer mTambahanUang;
-    private Integer mCurrentUang;
+    private Integer[] mCurrentUang;
     private Integer mCurrentEnergy;
-    private Integer mWaktu;
     private Integer mEnergi;
+    private Integer mMinggu;
     
-    public Iboy(Integer modalUang, Integer tambahanUang, Integer waktu, Integer energi) {
+    public Iboy(Integer modalUang, Integer tambahanUang, Integer minggu, Integer energi) {
         mModalUang = modalUang;
-        mTambahanUang = tambahanUang;
-        mCurrentUang = mModalUang;
-        mWaktu = waktu;
         mEnergi = energi;
+        mMinggu = minggu;
+        mCurrentUang = new Integer[minggu * 7 * 10];
+        mCurrentUang[0] = modalUang;
+        for (int i = 1; i < (minggu * 7 * 10); i++) {
+            if(i % 10 == 0) {
+                mCurrentUang[i] = mCurrentUang[i-1] + tambahanUang;
+            } else {
+                mCurrentUang[i] = mCurrentUang[i-1];
+            }
+        }
     }
 
     /* STATIC METHOD */
@@ -33,55 +40,49 @@ public class Iboy {
 
     /* METHOD */
     public void reset() {
-        mCurrentUang = mModalUang;
         mCurrentEnergy = mEnergi;
-    }
-    public void nextDay() {
-        mCurrentEnergy = mEnergi;
-        mCurrentUang += mTambahanUang;
     }
     public Boolean isCewekDateable(Integer cewekID, Integer time) {
         Cewek cewek = Cewek.getCewek(cewekID);
-        Barang[] prereq = cewek.getPrerequisite();
-        int total = 0;
-        for (int i = 0; i < prereq.length; i++) {
-            if (!prereq[i].isPurchaseable(time)) {
-                return false;
-            }
-            total += prereq[i].getHarga();
-        }
-        return (total > mCurrentUang)&&(mCurrentEnergy >= cewek.getEnergiHabis()) && (cewek.isDateable(time));
+        return (mCurrentEnergy >= cewek.getEnergiHabis()) && (cewek.isDateable(time));
     }
     public void dateCewek(Integer cewekID, Integer time) {
         Cewek c = Cewek.getCewek(cewekID);
-        Barang[] prereq = c.getPrerequisite();
-        for (int i = 0; i < prereq.length; i++) {
-            purchaseBarang(cewekID, time);
-        }
         useEnergy(cewekID);
         c.dateIboy();
     }
     public void purchaseBarang(Integer barangID, Integer time) {
-        mCurrentUang -= Barang.getBarang(barangID).getHarga();
+        useUang(Barang.getBarang(barangID).getHarga(), time);
         Barang.getBarang(barangID).purchased(time);
     }
     public void useEnergy(Integer cewekID) {
         mCurrentEnergy -= Cewek.getCewek(cewekID).getEnergiHabis();
     }
-    public void tambahUang() {
-        mCurrentUang += mTambahanUang;
+    public Boolean isUangAvailable(Integer amount, Integer time) {
+        for (int i = time; i < (mMinggu * 7 * 10); i++) {
+            if((mCurrentUang[i] - amount) < 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+    public void useUang(Integer amount, Integer time) {
+        for (int i = time; i < (mMinggu * 7 * 10); i++) {
+            mCurrentUang[i] -= amount;
+        }
     }
 
     /* GETTER and SETTER */
-    public Integer getCurrentUang() {       return mCurrentUang;    }
-    public Integer getCurrentEnergy() {     return mCurrentEnergy;  }
+    public Integer getCurrentUang(Integer time)
+                                    {       return mCurrentUang[time];}
+    public Integer getCurrentEnergy()
+                                    {       return mCurrentEnergy;  }
     public Integer getModalUang()   {       return mModalUang;      }
     public Integer getTambahanUang(){       return mTambahanUang;   }
-    public Integer getWaktu()       {       return mWaktu;          }
     public Integer getEnergi()      {       return mEnergi;         }
+    public Integer getMinggu()      {       return mMinggu;         }
     
     public void setModalUang(Integer uang)      {        mModalUang = uang;     }
     public void setTambahanUang(Integer uang)   {        mTambahanUang = uang;  }
-    public void setWaktu(Integer waktu)         {        mWaktu = waktu;        }
     public void setEnergi(Integer energi)       {        mEnergi = energi;      }
 }

@@ -41,7 +41,7 @@ public class Arrangement {
                     }
                 }
             }
-            Iboy.getActiveIboy().nextDay();
+            Iboy.getActiveIboy().reset();
         }
         mArrangement = builder.toString();
         return 0;
@@ -62,7 +62,7 @@ public class Arrangement {
         }
     }
     private void nextDay() {
-        Iboy.getActiveIboy().nextDay();
+        Iboy.getActiveIboy().reset();
         for (int i = 0; i < Cewek.getTotalCewek(); i++) {
             Cewek.getCewek(i).reset();
         }
