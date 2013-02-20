@@ -23,7 +23,7 @@ public class Arrangement {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < mDays; i++) {
             for (int j = 0; j < 10; j++) {
-                int pos = i*10 + j;
+                int pos = i*7 + j;
                 Integer cewekID = Integer.valueOf(mArrangement.substring(pos, pos));
                 if(cewekID == 0) {
                     mAvailable[i]++;
@@ -70,8 +70,59 @@ public class Arrangement {
             Barang.getBarang(0).reset();
         }
     }
+    
+    public Integer calculateTotalEnlightenment(){
+        int total = 0;
+        int key;
+        for (int i = 0; i < mArrangement.length(); i++){
+            key = mArrangement.charAt(i) - (int)'A' + 1;
+            if ((key >= 1) && (key <= Cewek.getTotalCewek())){
+                total += Cewek.getCewek(key).getEnlightenment();
+            }
+        }
+        return total;
+    }
+    
+    private void crossOver(Arrangement a){
+        int cuttingValue1 = (int)(this.calculateTotalEnlightenment() * crossFactor);
+        int cuttingValue2 = (int)(a.calculateTotalEnlightenment() * crossFactor);
+        int subtotal = 0;
+        int i = 0;
+        int key;
+        boolean flag = false; 
+        String tail1, tail2;
+        if (cuttingValue1 >= cuttingValue2){
+            while ((i < this.mArrangement.length()) && (i % 10 == 0) && !flag){
+                key = this.mArrangement.charAt(i) - (int)'A' + 1;
+                if ((key >= 1) && (key <= Cewek.getTotalCewek())){
+                    subtotal += Cewek.getCewek(key).getEnlightenment();
+                    if (subtotal >= cuttingValue1){
+                        flag = true;
+                    }
+                }
+                i++;
+            }
+        } else {
+            while ((i < a.mArrangement.length()) && (i % 10 == 0) && !flag){
+                key = a.mArrangement.charAt(i) - (int)'A' + 1;
+                if ((key >= 1) && (key <= Cewek.getTotalCewek())){
+                    subtotal += Cewek.getCewek(key).getEnlightenment();
+                    if (subtotal >= cuttingValue2){
+                        flag = true;
+                    }
+                }
+                i++;
+            }
+        }
+        tail1 = this.mArrangement.substring(i, this.mArrangement.length()-1);
+        tail2 = a.mArrangement.substring(i, a.mArrangement.length()-1);
+        /* Swapping */
+        this.mArrangement = this.mArrangement.substring(0, i-1) + tail2;
+        a.mArrangement = a.mArrangement.substring(0, i-1) + tail1;
+    }
 
     private Integer[] mAvailable;
     private Integer mDays;
     private String mArrangement;
+    private static final double crossFactor = 0.5;
 }
