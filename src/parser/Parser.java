@@ -23,7 +23,7 @@ public class Parser {
         } catch (FileNotFoundException ex) {
         }
         Scanner sc = new Scanner(fis);
-        for (int i = 0; i < Cewek.getTotalCewek(); i++) {
+        for (int i = 1; i <= Cewek.getTotalCewek(); i++) {
             Cewek.getCewek(i).setJadwal(sc.next());
         }
     }

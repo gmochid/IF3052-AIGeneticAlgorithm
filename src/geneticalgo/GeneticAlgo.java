@@ -14,7 +14,7 @@ public class GeneticAlgo {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        Parser.parseGeneralFile("file1.txt");
+        Parser.parseGeneralFile("file.txt");
         Parser.parseScheduleFile("file2.txt");
     }
 }
