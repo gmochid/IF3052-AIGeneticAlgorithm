@@ -23,7 +23,7 @@ public class Arrangement {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < mDays; i++) {
             for (int j = 0; j < 10; j++) {
-                int pos = i*7 + j;
+                int pos = i*10 + j;
                 Integer cewekID = Integer.valueOf(mArrangement.substring(pos, pos));
                 if(cewekID == 0) {
                     mAvailable[i]++;
