@@ -22,6 +22,7 @@ public class Iboy {
         mMinggu = minggu;
         mCurrentUang = new Integer[minggu * 7 * 10];
         mCurrentUang[0] = modalUang;
+        mTambahanUang = tambahanUang;
         for (int i = 1; i < (minggu * 7 * 10); i++) {
             if(i % 10 == 0) {
                 mCurrentUang[i] = mCurrentUang[i-1] + tambahanUang;
@@ -43,6 +44,14 @@ public class Iboy {
     /* METHOD */
     public void reset() {
         mCurrentEnergy = mEnergi;
+        mCurrentUang[0] = mModalUang;
+        for (int i = 1; i < (mMinggu * 7 * 10); i++) {
+            if(i % 10 == 0) {
+                mCurrentUang[i] = mCurrentUang[i-1] + mTambahanUang;
+            } else {
+                mCurrentUang[i] = mCurrentUang[i-1];
+            }
+        }
     }
 
     public void resetSimulation() {

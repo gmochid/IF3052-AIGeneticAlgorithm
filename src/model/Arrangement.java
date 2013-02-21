@@ -23,7 +23,7 @@ public class Arrangement {
     
     public Arrangement(String arrangement) {
         mArrangement = arrangement;
-        mDays = mArrangement.length() / 7;
+        mDays = mArrangement.length() / 10;
     }
 
     public void validate() {
@@ -91,7 +91,7 @@ public class Arrangement {
                     }
                 }
             }
-            Iboy.getActiveIboy().printDays(i);
+            //Iboy.getActiveIboy().printDays(i);
             nextDay();
         }
         mArrangement = builder.toString();
@@ -107,7 +107,6 @@ public class Arrangement {
                 total += Cewek.getCewek(key).getEnlightenment();
             }
         }
-        System.out.println(total);
         return total;
     }
     
@@ -172,6 +171,85 @@ public class Arrangement {
         for (int i = 0; i < Barang.getTotalBarang(); i++) {
             Barang.getBarang(0).reset();
         }
+    }
+
+    public String getFinalArrangement() {
+        resetAll();
+        char[] builder = new char[mDays * 10];
+
+        for (int i = 0; i < mDays; i++) {
+
+            for (int j = 0; j < 10; j++) {
+                int pos = i*10 + j;
+
+                Integer cewekID = (int) mArrangement.charAt(pos) - (int) '0';
+                if(cewekID == 0) {
+                    mAvailable[i]++;
+                    builder[pos] = '0';
+                } else {
+                    if(Iboy.getActiveIboy().isCewekDateable(cewekID, pos)) {
+                        ArrayList<Barang> prereq = Cewek.getCewek(cewekID).getPrerequisite();
+
+                        // simulate purchasing barang
+                        resetSimulation();
+                        Iboy.getActiveIboy().resetSimulation();
+                        int len = prereq.size();
+                        for (Barang b: prereq) {
+                            for (int k = 0; k < pos; k++) {
+                                if(Iboy.getActiveIboy().isUangSAvailable(b.getHarga(), k)
+                                        &&
+                                        b.isPurchaseable(i)
+                                        &&
+                                        (mAvailableS[i] > 0)) {
+                                    Iboy.getActiveIboy().useUangS(b.getHarga(), k);
+                                    len--;
+                                    mAvailableS[i]--;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if(len == 0) {
+                            // purchasing barang
+                            for (Barang b: prereq) {
+                                for (int k = 0; k < pos; k++) {
+                                    if(Iboy.getActiveIboy().isUangAvailable(b.getHarga(), k)
+                                            &&
+                                            b.isPurchaseable(i)
+                                            &&
+                                            (mAvailable[i] > 0)
+                                            &&
+                                            (builder[k] == '0')
+                                            ) {
+                                        Iboy.getActiveIboy().useUang(b.getHarga(), k);
+                                        builder[k] = b.getBarangID();
+                                        b.purchase(k / 10);
+                                        mAvailable[i]--;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            Iboy.getActiveIboy().dateCewek(cewekID, pos);
+                            builder[pos] = (char) (cewekID + (int) '0');
+                        } else {
+                            mAvailable[i]++;
+                            builder[pos] = '0';
+                        }
+                    } else {
+                        mAvailable[i]++;
+                        builder[pos] = '0';
+                    }
+                }
+            }
+            nextDay();
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < builder.length; i++) {
+            sb.append(builder[i]);
+        }
+        mArrangement = sb.toString();
+        return mArrangement;
     }
 
     public String getArrangement() {

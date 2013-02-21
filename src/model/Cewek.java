@@ -39,6 +39,11 @@ public class Cewek {
     public static Integer getTotalCewek() {
         return cewekLib.size();
     }
+    public static void resetAll(){
+        for (Cewek cewek : cewekLib.values()) {
+            cewek.reset();
+        }
+    }
 
     /* METHOD */
     public void reset() {
