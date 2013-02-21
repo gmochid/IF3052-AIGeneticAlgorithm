@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  *
@@ -8,10 +9,14 @@ import java.util.ArrayList;
  */
 public class Arrangement {
     public Arrangement(Integer days) {
+        this(days, new Integer(new Random().nextInt(5) + 1).toString().charAt(0));
+    }
+
+    public Arrangement(Integer days, char x) {
         mDays = days;
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < (mDays * 10); i++) {
-            builder.append('4');
+            builder.append(x);
         }
         mArrangement = builder.toString();
     }

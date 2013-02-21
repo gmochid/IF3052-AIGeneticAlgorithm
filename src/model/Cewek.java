@@ -55,7 +55,7 @@ public class Cewek {
         return AB;
     }
     public Boolean isDateable(Integer time) {
-        return (mCurrentWaktu > 0) && (mJadwal.charAt(time) == '1');
+        return (mCurrentWaktu > 0) && (mJadwal.charAt(time % 70) == '1');
     }
 
     /* GETTER and SETTER */

@@ -3,6 +3,7 @@
  * and open the template in the editor.
  */
 package geneticalgo;
+import java.util.ArrayList;
 import model.*;
 import parser.Parser;
 /**
@@ -18,10 +19,12 @@ public class GeneticAlgo {
         Parser.parseGeneralFile("file.txt");
         Parser.parseScheduleFile("file2.txt");
         
-        Arrangement a = new Arrangement(7);
-        a.validate();
-        for (int i = 0; i < 7; i++) {
-            System.out.println(a.getArrangement().substring(i * 10, (i+1) * 10));
+        ArrayList<Arrangement> AL = new ArrayList<Arrangement>();
+        for (int i = 0; i < 4; i++) {
+            AL.add(new Arrangement(14));
+        }
+        for (Arrangement a: AL) {
+            System.out.println(a.getArrangement());
         }
     }
 }
