@@ -3,6 +3,7 @@
  * and open the template in the editor.
  */
 package geneticalgo;
+import ai.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -15,10 +16,7 @@ import parser.Parser;
  */
 public class GeneticAlgo {
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
+    public static String GA() {
         Parser.parseGeneralFile("file.txt");
         Parser.parseScheduleFile("file2.txt");
 
@@ -46,6 +44,7 @@ public class GeneticAlgo {
         }
 
         System.out.println("Final : " + populasi.get(0).getFinalArrangement() + " " + populasi.get(0).calculateTotalEnlightenment());
+        return populasi.get(0).getFinalArrangement();
     }
 
     public static void initializePopulation() {
