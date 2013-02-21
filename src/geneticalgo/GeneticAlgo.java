@@ -106,6 +106,11 @@ public class GeneticAlgo {
             int y = (2 * i) + 1;
             children.get(x).crossOver(children.get(y));
         }
+
+        /**
+         * mutasinya ditaruh sini ya
+         */
+
         for(Arrangement ar: children) {
             ar.validate();
         }
@@ -128,7 +133,7 @@ public class GeneticAlgo {
             if (len == 3)
                 break;
         }
-/*
+        /*
         for (Arrangement ar : populasi) {
             System.out.print(ar.getArrangement() + " ");
             System.out.println(ar.calculateTotalEnlightenment());
