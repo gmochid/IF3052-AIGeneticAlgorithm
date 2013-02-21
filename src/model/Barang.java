@@ -44,12 +44,7 @@ public class Barang {
         }
     }
     public Boolean isPurchaseable(Integer days) {
-        try {
-            return mCurrentStock[days] > 0;
-        } catch (Exception e) {
-            System.out.println("++" + days);
-        }
-        return false;
+        return mCurrentStock[days] > 0;
     }
     public void purchase(Integer days) {
         mCurrentStock[days]--;

@@ -6,6 +6,7 @@ package geneticalgo;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
+import java.util.Scanner;
 import model.*;
 import parser.Parser;
 /**
@@ -32,13 +33,19 @@ public class GeneticAlgo {
          * 
          */
         for (Arrangement a: populasi) {
+            a.validate();
             System.out.println(a.getArrangement() + " " + a.calculateTotalEnlightenment());
         }
 
-        for (int i = 0; i < 25; i++) {
+        int i=0;
+        // SAMPE BERHENTI
+        while(i<=100){
             crossingOver();
+            i++;
+            System.out.println(populasi.get(0).getFinalArrangement() + " " + populasi.get(0).calculateTotalEnlightenment());
         }
-        System.out.println(populasi.get(0).getFinalArrangement());
+
+        System.out.println("Final : " + populasi.get(0).getFinalArrangement() + " " + populasi.get(0).calculateTotalEnlightenment());
     }
 
     public static void initializePopulation() {
@@ -121,10 +128,10 @@ public class GeneticAlgo {
             if (len == 3)
                 break;
         }
-
+/*
         for (Arrangement ar : populasi) {
             System.out.print(ar.getArrangement() + " ");
             System.out.println(ar.calculateTotalEnlightenment());
-        }
+        }*/
     }
 }
