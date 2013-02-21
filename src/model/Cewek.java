@@ -17,7 +17,7 @@ public class Cewek {
     private String mPrerequisiteID;
     private Integer mCewekID;
     private String mJadwal;
-    public Cewek(Integer enlightenment,Integer energihabis, Integer waktumax, String prerequisiteID){
+    public Cewek(Integer enlightenment,Integer energihabis, Integer waktumax, String prerequisiteID, Integer minggu){
         mEnlightenment = enlightenment;
         mEnergiHabis = energihabis;
         mWaktuMax = waktumax;

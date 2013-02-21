@@ -13,6 +13,7 @@ public class Arrangement {
         }
         mArrangement = builder.toString();
     }
+    
     public Arrangement(String arrangement) {
         mArrangement = arrangement;
         mDays = mArrangement.length() / 7;
@@ -30,18 +31,49 @@ public class Arrangement {
                     builder.append('0');
                 } else {
                     if(Iboy.getActiveIboy().isCewekDateable(cewekID, pos)) {
-                        Iboy.getActiveIboy().dateCewek(cewekID, pos);
-                        /*
-                         * TODO : Susun2 jadwal membeli barang
-                         */
-                        builder.append(cewekID);
+                        Barang[] prereq = Cewek.getCewek(cewekID).getPrerequisite();
+
+                        // simulate purchasing barang
+                        Iboy.getActiveIboy().resetSimulation();
+                        int len = prereq.length;
+                        for (Barang b: prereq) {
+                            for (int k = 0; k < pos; k++) {
+                                if(Iboy.getActiveIboy().isUangSAvailable(b.getHarga(), k)
+                                        &&
+                                        b.isPurchaseable(k / 10)) {
+                                    Iboy.getActiveIboy().useUangS(b.getHarga(), k);
+                                    len--;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if(len == 0) {
+                            // purchasing barang
+                            for (Barang b: prereq) {
+                                for (int k = 0; k < pos; k++) {
+                                    if(Iboy.getActiveIboy().isUangAvailable(b.getHarga(), k)
+                                            &&
+                                            b.isPurchaseable(k / 10)) {
+                                        Iboy.getActiveIboy().useUang(b.getHarga(), k);
+                                        b.purchase(k / 10);
+                                        break;
+                                    }
+                                }
+                            }
+
+                            Iboy.getActiveIboy().dateCewek(cewekID, pos);
+                            builder.append(cewekID);
+                        } else {
+                            builder.append('0');
+                        }
                     } else {
                         mAvailable[i]++;
                         builder.append('0');
                     }
                 }
             }
-            Iboy.getActiveIboy().reset();
+            nextDay();
         }
         mArrangement = builder.toString();
         return 0;
@@ -61,6 +93,7 @@ public class Arrangement {
             Barang.getBarang(0).reset();
         }
     }
+
     private void nextDay() {
         Iboy.getActiveIboy().reset();
         for (int i = 0; i < Cewek.getTotalCewek(); i++) {

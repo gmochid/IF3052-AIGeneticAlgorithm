@@ -43,7 +43,7 @@ public class Barang {
     public Boolean isPurchaseable(Integer days) {
         return mCurrentStock[days] > 0;
     }
-    public void purchased(Integer days) {
+    public void purchase(Integer days) {
         mCurrentStock[days]--;
     }
 

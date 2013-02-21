@@ -43,7 +43,7 @@ public class Parser {
         Iboy.setActiveIboy(iboy);
         int n = sc.nextInt();
         for (int i = 0; i < n; i++) {
-            Cewek cewek = new Cewek(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.next());
+            Cewek cewek = new Cewek(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.next(), Iboy.getActiveIboy().getMinggu());
             Cewek.addCewek(cewek);
         }
         /*for (int i = 1; i <= Cewek.getTotalCewek(); i++) {

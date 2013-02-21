@@ -11,6 +11,7 @@ public class Iboy {
     private Integer mModalUang;
     private Integer mTambahanUang;
     private Integer[] mCurrentUang;
+    private Integer[] mCurrentUangS;
     private Integer mCurrentEnergy;
     private Integer mEnergi;
     private Integer mMinggu;
@@ -34,6 +35,7 @@ public class Iboy {
     public static void setActiveIboy(Iboy iboy) {
         activeIboy = iboy;
     }
+
     public static Iboy getActiveIboy() {
         return activeIboy;
     }
@@ -42,29 +44,47 @@ public class Iboy {
     public void reset() {
         mCurrentEnergy = mEnergi;
     }
+
+    public void resetSimulation() {
+        mCurrentUangS = new Integer[mCurrentUang.length];
+        System.arraycopy(mCurrentUang, 0, mCurrentUangS, 0, mCurrentUang.length);
+    }
+
     public Boolean isCewekDateable(Integer cewekID, Integer time) {
         Cewek cewek = Cewek.getCewek(cewekID);
         return (mCurrentEnergy >= cewek.getEnergiHabis()) && (cewek.isDateable(time));
     }
+
     public void dateCewek(Integer cewekID, Integer time) {
         Cewek c = Cewek.getCewek(cewekID);
         useEnergy(cewekID);
         c.dateIboy();
     }
-    public void purchaseBarang(Integer barangID, Integer time) {
-        useUang(Barang.getBarang(barangID).getHarga(), time);
-        Barang.getBarang(barangID).purchased(time);
-    }
+
     public void useEnergy(Integer cewekID) {
         mCurrentEnergy -= Cewek.getCewek(cewekID).getEnergiHabis();
     }
-    public Boolean isUangAvailable(Integer amount, Integer time) {
+
+    public Boolean isUangSAvailable(Integer amount, Integer time) {
         for (int i = time; i < (mMinggu * 7 * 10); i++) {
-            if((mCurrentUang[i] - amount) < 0) {
+            if((mCurrentUangS[i] - amount) < 0) {
                 return false;
             }
         }
         return true;
+    }
+    public Boolean isUangAvailable(Integer amount, Integer time) {
+        for (int i = time; i < (mMinggu * 7 * 10); i++) {
+            if((mCurrentUangS[i] - amount) < 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+    public void useUangS(Integer amount, Integer time) {
+        for (int i = time; i < (mMinggu * 7 * 10); i++) {
+            mCurrentUangS[i] -= amount;
+        }
     }
     public void useUang(Integer amount, Integer time) {
         for (int i = time; i < (mMinggu * 7 * 10); i++) {
