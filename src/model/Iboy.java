@@ -92,6 +92,14 @@ public class Iboy {
         }
     }
 
+    public void printDays(Integer days) {
+        for (int i = days * 10; i < (days * 10 + 10); i++) {
+            System.out.print(getCurrentUang(i));
+            System.out.print('-');
+        }
+        System.out.println();
+    }
+
     /* GETTER and SETTER */
     public Integer getCurrentUang(Integer time)
                                     {       return mCurrentUang[time];}

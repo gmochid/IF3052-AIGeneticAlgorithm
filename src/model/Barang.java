@@ -13,11 +13,14 @@ public class Barang {
     private Integer[] mCurrentStock;
     private Integer mRestock;
 
-    public Barang(char barangID,Integer harga, Integer restock, Integer time){
+    public Barang(char barangID,Integer harga, Integer restock, Integer days){
         mBarangID = barangID;
         mHarga = harga;
         mRestock = restock;
-        mCurrentStock = new Integer[time];
+        mCurrentStock = new Integer[days];
+        for (int i = 0; i < days; i++) {
+            mCurrentStock[i] = mRestock;
+        }
     }
 
     /* STATIC METHOD */
@@ -41,7 +44,12 @@ public class Barang {
         }
     }
     public Boolean isPurchaseable(Integer days) {
-        return mCurrentStock[days] > 0;
+        try {
+            return mCurrentStock[days] > 0;
+        } catch (Exception e) {
+            System.out.println("++" + days);
+        }
+        return false;
     }
     public void purchase(Integer days) {
         mCurrentStock[days]--;

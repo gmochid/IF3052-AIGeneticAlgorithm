@@ -43,7 +43,7 @@ public class Parser {
         Iboy.setActiveIboy(iboy);
         int n = sc.nextInt();
         for (int i = 0; i < n; i++) {
-            Cewek cewek = new Cewek(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.next(), Iboy.getActiveIboy().getMinggu());
+            Cewek cewek = new Cewek(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.next());
             Cewek.addCewek(cewek);
         }
         /*for (int i = 1; i <= Cewek.getTotalCewek(); i++) {
@@ -52,7 +52,7 @@ public class Parser {
         n = sc.nextInt();
         for (int i = 0; i < n; i++) {
             String s = sc.next();
-            Barang barang = new Barang(s.charAt(0), sc.nextInt(), sc.nextInt(), Iboy.getActiveIboy().getMinggu());
+            Barang barang = new Barang(s.charAt(0), sc.nextInt(), sc.nextInt(), Iboy.getActiveIboy().getMinggu() * 7);
             Barang.addBarang(barang);
         }
         /*for (int i = 0; i < Barang.getTotalBarang(); i++) {

@@ -17,11 +17,15 @@ public class Cewek {
     private String mPrerequisiteID;
     private Integer mCewekID;
     private String mJadwal;
-    public Cewek(Integer enlightenment,Integer energihabis, Integer waktumax, String prerequisiteID, Integer minggu){
+    public Cewek(Integer enlightenment,Integer energihabis, Integer waktumax, String prerequisiteID){
         mEnlightenment = enlightenment;
         mEnergiHabis = energihabis;
         mWaktuMax = waktumax;
-        mPrerequisiteID = prerequisiteID;
+        if(prerequisiteID.equals("-")) {
+            mPrerequisiteID = "";
+        } else {
+            mPrerequisiteID = prerequisiteID;
+        }
         mCewekID = ++cewekTotal;
     }
 
@@ -43,12 +47,12 @@ public class Cewek {
     public void dateIboy() {
         mCurrentWaktu--;
     }
-    public Barang[] getPrerequisite()   {
+    public ArrayList<Barang> getPrerequisite()   {
         ArrayList<Barang> AB = new ArrayList<Barang>();
         for (int i = 0; i < getPrerequisiteID().length(); i++) {
             AB.add(Barang.getBarang(getPrerequisiteID().charAt(i)));
         }
-        return (Barang[]) AB.toArray();
+        return AB;
     }
     public Boolean isDateable(Integer time) {
         return (mCurrentWaktu > 0) && (mJadwal.charAt(time) == '1');

@@ -1,15 +1,17 @@
 package model;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author gmochid
  */
 public class Arrangement {
-    public Arrangement(Integer time) {
-        mDays = time;
+    public Arrangement(Integer days) {
+        mDays = days;
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < (mDays * 7); i++) {
-            builder.append('0');
+        for (int i = 0; i < (mDays * 10); i++) {
+            builder.append('4');
         }
         mArrangement = builder.toString();
     }
@@ -19,30 +21,37 @@ public class Arrangement {
         mDays = mArrangement.length() / 7;
     }
 
-    public Integer validate() {
+    public void validate() {
         resetAll();
         StringBuilder builder = new StringBuilder();
+
         for (int i = 0; i < mDays; i++) {
+            
             for (int j = 0; j < 10; j++) {
-                int pos = i*7 + j;
-                Integer cewekID = Integer.valueOf(mArrangement.substring(pos, pos));
+                int pos = i*10 + j;
+
+                Integer cewekID = (int) mArrangement.charAt(pos) - (int) '0';
                 if(cewekID == 0) {
                     mAvailable[i]++;
                     builder.append('0');
                 } else {
                     if(Iboy.getActiveIboy().isCewekDateable(cewekID, pos)) {
-                        Barang[] prereq = Cewek.getCewek(cewekID).getPrerequisite();
+                        ArrayList<Barang> prereq = Cewek.getCewek(cewekID).getPrerequisite();
 
                         // simulate purchasing barang
+                        resetSimulation();
                         Iboy.getActiveIboy().resetSimulation();
-                        int len = prereq.length;
+                        int len = prereq.size();
                         for (Barang b: prereq) {
                             for (int k = 0; k < pos; k++) {
                                 if(Iboy.getActiveIboy().isUangSAvailable(b.getHarga(), k)
                                         &&
-                                        b.isPurchaseable(k / 10)) {
+                                        b.isPurchaseable(i)
+                                        &&
+                                        (mAvailableS[i] > 0)) {
                                     Iboy.getActiveIboy().useUangS(b.getHarga(), k);
                                     len--;
+                                    mAvailableS[i]--;
                                     break;
                                 }
                             }
@@ -54,9 +63,12 @@ public class Arrangement {
                                 for (int k = 0; k < pos; k++) {
                                     if(Iboy.getActiveIboy().isUangAvailable(b.getHarga(), k)
                                             &&
-                                            b.isPurchaseable(k / 10)) {
+                                            b.isPurchaseable(i)
+                                            &&
+                                            (mAvailable[i] > 0)) {
                                         Iboy.getActiveIboy().useUang(b.getHarga(), k);
                                         b.purchase(k / 10);
+                                        mAvailable[i]--;
                                         break;
                                     }
                                 }
@@ -65,6 +77,7 @@ public class Arrangement {
                             Iboy.getActiveIboy().dateCewek(cewekID, pos);
                             builder.append(cewekID);
                         } else {
+                            mAvailable[i]++;
                             builder.append('0');
                         }
                     } else {
@@ -73,35 +86,11 @@ public class Arrangement {
                     }
                 }
             }
+            Iboy.getActiveIboy().printDays(i);
             nextDay();
         }
         mArrangement = builder.toString();
-        return 0;
-    }
-
-    private void resetAll() {
-        mAvailable = new Integer[mDays];
-        for (int i = 0; i < mDays; i++) {
-            mAvailable[i] = 0;
-        }
-
-        Iboy.getActiveIboy().reset();
-        for (int i = 0; i < Cewek.getTotalCewek(); i++) {
-            Cewek.getCewek(i).reset();
-        }
-        for (int i = 0; i < Barang.getTotalBarang(); i++) {
-            Barang.getBarang(0).reset();
-        }
-    }
-
-    private void nextDay() {
-        Iboy.getActiveIboy().reset();
-        for (int i = 0; i < Cewek.getTotalCewek(); i++) {
-            Cewek.getCewek(i).reset();
-        }
-        for (int i = 0; i < Barang.getTotalBarang(); i++) {
-            Barang.getBarang(0).reset();
-        }
+        return;
     }
     
     public Integer calculateTotalEnlightenment(){
@@ -154,7 +143,42 @@ public class Arrangement {
         a.mArrangement = a.mArrangement.substring(0, i-1) + tail1;
     }
 
+    private void resetSimulation() {
+        mAvailableS = new Integer[mDays];
+        System.arraycopy(mAvailable, 0, mAvailableS, 0, mDays);
+    }
+
+    private void resetAll() {
+        mAvailable = new Integer[mDays];
+        for (int i = 0; i < mDays; i++) {
+            mAvailable[i] = 0;
+        }
+
+        Iboy.getActiveIboy().reset();
+        for (int i = 1; i <= Cewek.getTotalCewek(); i++) {
+            Cewek.getCewek(i).reset();
+        }
+        for (int i = 0; i < Barang.getTotalBarang(); i++) {
+            Barang.getBarang(i).reset();
+        }
+    }
+
+    private void nextDay() {
+        Iboy.getActiveIboy().reset();
+        for (int i = 1; i <= Cewek.getTotalCewek(); i++) {
+            Cewek.getCewek(i).reset();
+        }
+        for (int i = 0; i < Barang.getTotalBarang(); i++) {
+            Barang.getBarang(0).reset();
+        }
+    }
+
+    public String getArrangement() {
+        return mArrangement;
+    }
+
     private Integer[] mAvailable;
+    private Integer[] mAvailableS;
     private Integer mDays;
     private String mArrangement;
     private static final double crossFactor = 0.5;
