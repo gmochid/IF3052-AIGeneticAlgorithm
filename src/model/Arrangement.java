@@ -97,15 +97,16 @@ public class Arrangement {
         int total = 0;
         int key;
         for (int i = 0; i < mArrangement.length(); i++){
-            key = mArrangement.charAt(i) - (int)'A' + 1;
+            key = mArrangement.charAt(i) - (int)'0';
             if ((key >= 1) && (key <= Cewek.getTotalCewek())){
                 total += Cewek.getCewek(key).getEnlightenment();
             }
         }
+        System.out.println(total);
         return total;
     }
     
-    private void crossOver(Arrangement a){
+    public void crossOver(Arrangement a){
         int cuttingValue1 = (int)(this.calculateTotalEnlightenment() * crossFactor);
         int cuttingValue2 = (int)(a.calculateTotalEnlightenment() * crossFactor);
         int subtotal = 0;
@@ -114,33 +115,28 @@ public class Arrangement {
         boolean flag = false; 
         String tail1, tail2;
         if (cuttingValue1 >= cuttingValue2){
-            while ((i < this.mArrangement.length()) && (i % 10 == 0) && !flag){
-                key = this.mArrangement.charAt(i) - (int)'A' + 1;
+            while ((i < this.mArrangement.length()) && (subtotal <= cuttingValue1)){
+                key = this.mArrangement.charAt(i) - (int)'0';
                 if ((key >= 1) && (key <= Cewek.getTotalCewek())){
                     subtotal += Cewek.getCewek(key).getEnlightenment();
-                    if (subtotal >= cuttingValue1){
-                        flag = true;
-                    }
                 }
                 i++;
             }
         } else {
-            while ((i < a.mArrangement.length()) && (i % 10 == 0) && !flag){
-                key = a.mArrangement.charAt(i) - (int)'A' + 1;
+            while ((i < a.mArrangement.length()) && (subtotal <= cuttingValue1)){
+                key = a.mArrangement.charAt(i) - (int)'0';
                 if ((key >= 1) && (key <= Cewek.getTotalCewek())){
                     subtotal += Cewek.getCewek(key).getEnlightenment();
-                    if (subtotal >= cuttingValue2){
-                        flag = true;
-                    }
                 }
                 i++;
             }
         }
-        tail1 = this.mArrangement.substring(i, this.mArrangement.length()-1);
-        tail2 = a.mArrangement.substring(i, a.mArrangement.length()-1);
+        System.out.println(cuttingValue1+" "+cuttingValue2+" "+i);
+        tail1 = this.mArrangement.substring(i);
+        tail2 = a.mArrangement.substring(i);
         /* Swapping */
-        this.mArrangement = this.mArrangement.substring(0, i-1) + tail2;
-        a.mArrangement = a.mArrangement.substring(0, i-1) + tail1;
+        this.mArrangement = this.mArrangement.substring(0, i) + tail2;
+        a.mArrangement = a.mArrangement.substring(0, i) + tail1;
     }
 
     private void resetSimulation() {
