@@ -30,6 +30,7 @@ public class simulasi extends screen{
     
     private static boolean react;
     private static boolean buy;
+    private static char girl;
     
     private static int day;
     private static int time;
@@ -45,6 +46,7 @@ public class simulasi extends screen{
         iterator = 0;
         day = 1;
         time = 10;
+        girl = '0';
         react = false;
         buy = false;
         System.out.println(S);
@@ -57,21 +59,29 @@ public class simulasi extends screen{
         
         int x = p.x;
         int y = p.y;
+        //IF IBOY ARRIVED--------------------------------------------
         if ((player.getX()==y)&&(player.getY()==x)) {
             char c = arrangement.charAt(iterator);
-            if (!((c >= 'A')&&(c <= 'Z'))) {
+            //IF IBOY ARRIVED ON THE GIRL'S HOUSE
+            if (!((c >= 'A')&&(c <= 'Z'))&&(c != '0')) {
                 react = true;
-                char[] userBarang = whichItem(c);
+                girl = c;
+                char[] userBarang = whichItem(c).clone();
                 for (int i = 0; i < userBarang.length; i++) {
-                    listItem.useItem(c);
+                   listItem.useItem(userBarang[i]);
                 }
             }
+            //IF IBOY WENT TO THE MALL
             if ((c >= 'A')&&(c <= 'Z')){
                 listItem.addItem(c);
                 buy = true;
                 
             }
+            
             iterator = iterator + 1;
+            repaint();
+            
+            //IF A DAY HAS PASSED
             if (iterator%10 == 0){
                 player.setPosition(-100, -100);
                 super.update(elapsedTime);
@@ -179,6 +189,7 @@ public class simulasi extends screen{
         listItem.renders(g);
         
         if (react) {
+            paintGirl(g, girl);
             player.drawHeart(g);
         } else 
         if (buy) {
@@ -192,26 +203,34 @@ public class simulasi extends screen{
         g.drawString("Day : "+day, 600, 540);
         g.drawString("Time : "+time+".00", 600, 570);
         
-        if (time == 19) {
+        if (time == 20) {
             paintBlack(g);
         }
     }
     
-/*    public void paintItem(Graphics canvas, char c) {
+    public void paintGirl(Graphics canvas, char c) {
         Graphics2D g = (Graphics2D) canvas;
         BufferedImage img = null;
         try {
-            img = ImageIO.read(new File("/item/"+ c + ".jpg"));
+            img = ImageIO.read(new File("assets/girl/" + c + ".png"));
         } catch (IOException e) {
             }
-        g.drawImage(img, null, 0, 0);
-    }*/
+        if (c=='1'||c=='6'||c=='9' ) {
+            g.drawImage(img, null,((int)player.getX()*50)-15, ((int)player.getY()*50)-15);
+        }
+        else 
+            if (c=='5'||c=='8') {
+                g.drawImage(img, null,((int)player.getX()*50+30), ((int)player.getY()*50)-15);
+            }
+        else 
+        { g.drawImage(img, null,((int)player.getX()*50), ((int)player.getY()*50)-40); }
+    }
     
     public void paintBlack(Graphics canvas) {
         Graphics2D g = (Graphics2D) canvas;
         BufferedImage img = null;
         try {
-            img = ImageIO.read(new File("night.png"));
+            img = ImageIO.read(new File("assets/night.png"));
         } catch (IOException e) {
             }
         g.drawImage(img, null, 0, 0);

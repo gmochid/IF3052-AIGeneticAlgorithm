@@ -35,11 +35,12 @@ public class item {
     
     public void useItem (char c) {
         int i = 0;
-        while (type[i]!=c) {
+        while ((type[i] != c)&&(i<type.length)) {
             i++;
         }
-        while (type[i]!=0) {
+        while ((type[i]!=0)&&(i<type.length)) {
             type[i] = type[i+1];
+            i++;
         }
         length--;
     }
@@ -50,11 +51,11 @@ public class item {
         for (int i =0; i<length; i++) {
             char c = type[i];
             try {
-                img = ImageIO.read(new File("item/"+ c + ".jpg"));
+                img = ImageIO.read(new File("assets/item/"+ c + ".jpg"));
             } catch (IOException e) {
                 System.out.println("GAGAL LOAD ITEM");
                 }
-            canvas.drawImage(img, null, 810+((i%6)*50) , 430+((i/6)*50));
+            canvas.drawImage(img, null, 810 , 20+((i)*50));
         }
     }
 

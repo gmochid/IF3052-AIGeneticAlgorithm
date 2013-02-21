@@ -49,7 +49,7 @@ public class iBoy {
         Graphics2D canvas = (Graphics2D) g;
         BufferedImage img = null;
         try {
-            img = ImageIO.read(new File("iboy.png"));
+            img = ImageIO.read(new File("assets/iboy.png"));
         } catch (IOException e) {
             }
         canvas.drawImage(img, null,(int)posX*50, (int)posY*50);
@@ -60,8 +60,8 @@ public class iBoy {
         BufferedImage img = null;
         BufferedImage heart = null;
         try {
-            img = ImageIO.read(new File("iboy.png"));
-            heart = ImageIO.read(new File("heart.png"));
+            img = ImageIO.read(new File("assets/iboy.png"));
+            heart = ImageIO.read(new File("assets/heart.png"));
         } catch (IOException e) {
             }
         canvas.drawImage(img, null,(int)posX*50, (int)posY*50);
@@ -73,8 +73,8 @@ public class iBoy {
         BufferedImage img = null;
         BufferedImage heart = null;
         try {
-            img = ImageIO.read(new File("iboy.png"));
-            heart = ImageIO.read(new File("buy.png"));
+            img = ImageIO.read(new File("assets/iboy.png"));
+            heart = ImageIO.read(new File("assets/buy.png"));
         } catch (IOException e) {
             }
         canvas.drawImage(img, null,(int)posX*50, (int)posY*50);

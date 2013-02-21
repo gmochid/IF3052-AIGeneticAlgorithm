@@ -48,7 +48,7 @@ public class map {
         Graphics2D g = (Graphics2D) canvas;
         BufferedImage img = null;
         try {
-            img = ImageIO.read(new File("map.jpg"));
+            img = ImageIO.read(new File("assets/map.jpg"));
         } catch (IOException e) {
             }
         g.drawImage(img, null, 0, 0);
