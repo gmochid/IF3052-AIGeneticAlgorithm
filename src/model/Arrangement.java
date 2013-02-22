@@ -11,7 +11,7 @@ public class Arrangement {
         mDays = days;
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < (mDays * 10); i++) {
-            builder.append('4');
+            builder.append('1');
         }
         mArrangement = builder.toString();
     }
