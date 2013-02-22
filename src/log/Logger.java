@@ -21,6 +21,10 @@ public class Logger {
         Logger.window.addLog(s);
     }
     
+    public static void log2(String s) {
+        Logger.window.addLogAdv(s);
+    }
+    
     public static void main(String args[]) {
         summonWindow();
         log("Hello, world");
