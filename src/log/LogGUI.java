@@ -61,14 +61,13 @@ public class LogGUI extends javax.swing.JFrame {
     
     public void addLogAdv(String s) {
         advLogString += s + "\n";
-        updateTextarea2();
     }
     
     private void updateTextarea() {
         textArea.setText(logString);
     }
     
-    private void updateTextarea2() {
+    public void updateTextarea2() {
         textArea2.setText(advLogString);
     }
 
@@ -90,7 +89,7 @@ public class LogGUI extends javax.swing.JFrame {
         textArea2 = new javax.swing.JTextPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Genetic Algorithm Log");
+        setTitle("Solusi Kencan Iboy");
 
         jTabbedPane1.setToolTipText("");
         jTabbedPane1.setFont(jTabbedPane1.getFont());
@@ -160,18 +159,6 @@ public class LogGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new LogGUI().setVisible(true);
-            }
-        });
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

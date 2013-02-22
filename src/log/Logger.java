@@ -10,6 +10,8 @@ package log;
  */
 public class Logger {
     private static LogGUI window;
+    public static int countCrossOver = 0;
+    public static int countMutation = 0;
 
     public static void summonWindow() {
         Logger.window = LogGUI.singleton();
@@ -25,65 +27,7 @@ public class Logger {
         Logger.window.addLogAdv(s);
     }
     
-    public static void main(String args[]) {
-        summonWindow();
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
-        log("Hello, world");
+    public static void updateT2() {
+        Logger.window.updateTextarea2();
     }
 }

@@ -135,6 +135,8 @@ public class Arrangement {
     }
     
     public Integer crossOver(Arrangement a){
+        Logger.countCrossOver++;
+        Logger.log2("Crossover:");
         Logger.log2(mArrangement);
         Logger.log2("                                              X");
         Logger.log2(a.mArrangement);
@@ -182,6 +184,10 @@ public class Arrangement {
     }
 
     public void mutation2(Integer crossingPoint){
+        Logger.countMutation++;
+        Logger.log2("Mutation");
+        Logger.log2("Before: " + mArrangement);
+        
         Random r = new Random();
         boolean[] seed = {false,false,false,false,true,true};
 
@@ -203,8 +209,10 @@ public class Arrangement {
                 sb.append(mArrangement.charAt(i));
             }
         }
-
+        
         mArrangement = sb.toString();
+        
+        Logger.log2("After:  " + mArrangement + "\n");
     }
     
     public void mutation(Integer crossingPoint){

@@ -47,10 +47,9 @@ public class GeneticAlgo {
         }
         Logger.log2("\n");
 
-        Logger.log("Crossing over...");
+        Logger.log("Applying genetic algorithm...");
         long start = System.currentTimeMillis();
-        
-        Logger.log2("Crossovers:");
+
         int i=0;
         // SAMPE BERHENTI
         while(i<=100){
@@ -62,12 +61,13 @@ public class GeneticAlgo {
                 break;
         }
         
-        Logger.log2("Final:");
-        Logger.log2(populasi.get(0).getFinalArrangement() + " " + populasi.get(0).calculateTotalEnlightenment());
+        Logger.log2("Final result:");
+        Logger.log2(populasi.get(0).getFinalArrangement() + " ");
+        Logger.log2("Enlightenment: " + populasi.get(0).calculateTotalEnlightenment());
 
         long now = System.currentTimeMillis();
         long delta = now - start;
-        Logger.log("Crossing over took " + String.valueOf(delta) + " ms");
+        Logger.log("Genetic algorithm took " + String.valueOf(delta) + " ms");
         
         return populasi.get(0).getFinalArrangement();
     }

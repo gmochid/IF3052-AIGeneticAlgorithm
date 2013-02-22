@@ -31,13 +31,24 @@ public class Main {
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JPanel p = new JPanel();
         String S = GeneticAlgo.GA();
+
+        Logger.log("Genetic algorithm completed. Printing log...");
+        Logger.updateT2();
+        Logger.log("Log printed.");
+        Logger.log(Logger.countCrossOver + " crossovers");
+        Logger.log(Logger.countMutation + " mutations");
+        
         screen display = new simulasi(868, 600, S);
         
         p.add(display);
         f.add(p);
         f.pack();
         
+        Logger.log("Loading visualization...");
+        
         f.setVisible(true);
         display.loadContent();
+        Logger.log("Iboy is ready to rock!");
+        
     }
 }
