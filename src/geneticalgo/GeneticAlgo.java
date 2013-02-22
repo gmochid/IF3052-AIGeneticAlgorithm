@@ -43,6 +43,9 @@ public class GeneticAlgo {
             crossingOver();
             i++;
             System.out.println(populasi.get(0).getFinalArrangement() + " " + populasi.get(0).calculateTotalEnlightenment());
+            if(populasi.get(0).calculateTotalEnlightenment() > 180) {
+                break;
+            }
         }
 
         System.out.println("Final : " + populasi.get(0).getFinalArrangement() + " " + populasi.get(0).calculateTotalEnlightenment());
@@ -109,17 +112,19 @@ public class GeneticAlgo {
             int x = (2 * i);
             int y = (2 * i) + 1;
             crosspoint = children.get(x).crossOver(children.get(y));
+            Random r = new Random();
+            children.get(x).mutation2(r.nextInt(Iboy.getActiveIboy().getMinggu() * 70));
+            children.get(y).mutation2(r.nextInt(Iboy.getActiveIboy().getMinggu() * 70));
             //children.get(x).mutation(crosspoint);
             //children.get(y).mutation(crosspoint);
         }
 
         /**
          * mutasinya ditaruh sini ya
-         
-
+         */
         for(Arrangement ar: children) {
             ar.validate();
-        }*/
+        }
 
         Collections.sort(children, new ArrangementComparator());
 
@@ -144,5 +149,9 @@ public class GeneticAlgo {
             System.out.print(ar.getArrangement() + " ");
             System.out.println(ar.calculateTotalEnlightenment());
         }*/
+    }
+
+    public static void main(String[] args) {
+        System.out.println(GA());
     }
 }

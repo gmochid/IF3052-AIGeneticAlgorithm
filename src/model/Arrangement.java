@@ -39,7 +39,7 @@ public class Arrangement {
                 int pos = i*10 + j;
 
                 Integer cewekID = (int) mArrangement.charAt(pos) - (int) '0';
-                if(cewekID == 0) {
+                if((cewekID == 0) || (cewekID > 9)) {
                     mAvailable[i]++;
                     sb.append('0');
                 } else {
@@ -166,6 +166,32 @@ public class Arrangement {
         
         return i;
     }
+
+    public void mutation2(Integer crossingPoint){
+        Random r = new Random();
+        boolean[] seed = {false,false,false,false,true,true};
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < crossingPoint; i++) {
+            sb.append(mArrangement.charAt(i));
+        }
+
+        for (int i = crossingPoint; i < mDays * 10; i++) {
+            if(seed[r.nextInt(6)]) {
+                ArrayList<Cewek> AL = new ArrayList<Cewek>();
+                for (int j = 1; j <= Cewek.getTotalCewek(); j++) {
+                    if (Cewek.getCewek(j).isDateable(i)) {
+                        AL.add(Cewek.getCewek(j));
+                    }
+                }
+                sb.append(AL.get(r.nextInt(AL.size())).getCewekID());
+            } else {
+                sb.append(mArrangement.charAt(i));
+            }
+        }
+
+        mArrangement = sb.toString();
+    }
     
     public void mutation(Integer crossingPoint){
         /*STRATEGY :
@@ -202,7 +228,7 @@ public class Arrangement {
                 items.add(Barang.getBarang(karakter));
             }
         }
-        System.out.println("Hingga crosspoint, uang yang tersisa: "+cMoney);
+        //System.out.println("Hingga crosspoint, uang yang tersisa: "+cMoney);
         
         /*
          * cari tahu energi sekarang, mulai iterasi dari awal hari terdekat 
@@ -222,8 +248,8 @@ public class Arrangement {
                 //do nothing    
             }
         }
-        System.out.println("Hingga crosspoint, energi yang tersisa: "+cEnergy);
-        System.out.print("Hingga crosspoint, barang yang tersisa: ");
+        //System.out.println("Hingga crosspoint, energi yang tersisa: "+cEnergy);
+        //System.out.print("Hingga crosspoint, barang yang tersisa: ");
         for (Barang a : items){
             System.out.print(a.getBarangID()+" ");
         }
@@ -245,7 +271,7 @@ public class Arrangement {
                 minSucker = m+1;
             }
         }
-        System.out.println("Cewek dengan energi paling rendah: "+Cewek.getCewek(minSucker).getCewekID());
+        //System.out.println("Cewek dengan energi paling rendah: "+Cewek.getCewek(minSucker).getCewekID());
             
         //FIRST ATTEMPT : MODIFY CEWEK YANG AKAN DIAPEL
         StringBuilder sbArrangement = new StringBuilder(this.mArrangement);
@@ -286,11 +312,12 @@ public class Arrangement {
         }
         //setelah selesai dimodifikasi mArrangement nya sampai karakter terakhir
         mArrangement2 = sbArrangement.toString();
-        System.out.println("Hasil first attempt: "+mArrangement2);
-        
+        //System.out.println("Hasil first attempt: "+mArrangement2);
+        //System.out.println(itemsToBuy.size());
         //SECOND ATTEMPT : BELI BARANG2 UNTUK SUSUNAN CEWEK BARU
         StringBuilder sbArrangement2 = new StringBuilder(mArrangement2);
         int idx = 0;
+        boolean x = false;
         while (idx < itemsToBuy.size()){                                    //selama masih ada barang yang perlu dibeli
             for (int i = crossingPoint; i < mArrangement2.length(); i++){   //lakukan iterasi jam
                 if ((i > 0) && (i % 10 == 0)){                              //jika ganti hari
@@ -300,6 +327,7 @@ public class Arrangement {
                     }
                 }
                 //mau beli barang sesuai aturan FIFO
+                System.out.println(idx + " " + itemsToBuy.size());
                 if ((mArrangement2.charAt(i) == '0') && (itemsToBuy.get(idx).isPurchaseable(i%10))){    //jika ada yang kosong dan barang bisa dibeli
                     if (cMoneyS < Barang.getBarang(itemsToBuy.get(idx).getBarangID()).getHarga()){  //barang tidak bisa dibeli
                         //do nothing
@@ -308,14 +336,20 @@ public class Arrangement {
                         itemsToBuy.get(idx).purchase(i%10);
                         cMoneyS -= Barang.getBarang(itemsToBuy.get(idx).getBarangID()).getHarga();
                         idx++;
+                        if(idx == itemsToBuy.size()) {
+                            x = true;
+                            break;
+                        }
                     }
                 } else {    //entah dia lagi ga nganggur atau barangnya belum bisa dibeli
                     //do nothing
                 }
             }
+            if(x)
+                break;
         }
         mArrangement3 = sbArrangement2.toString();
-        System.out.println("Hasil second attempt: "+mArrangement3);
+        //System.out.println("Hasil second attempt: "+mArrangement3);
         
         //THIRD ATTEMPT : CEK ULANG APA SAAT NGAPEL CEWEK BARANG SUDAH ADA
         StringBuilder sbArrangement3 = new StringBuilder(mArrangement3);
@@ -356,7 +390,7 @@ public class Arrangement {
             }
         }
         mArrangement = sbArrangement3.toString();
-        System.out.println("Hasil third attempt: "+mArrangement);
+        //System.out.println("Hasil third attempt: "+mArrangement);
     }
     
     private void resetSimulation() {
@@ -392,6 +426,7 @@ public class Arrangement {
     public String getFinalArrangement() {
         resetAll();
         char[] builder = new char[mDays * 10];
+        //System.out.println(mArrangement);
 
         for (int i = 0; i < mDays; i++) {
 
@@ -399,7 +434,7 @@ public class Arrangement {
                 int pos = i*10 + j;
 
                 Integer cewekID = (int) mArrangement.charAt(pos) - (int) '0';
-                if(cewekID == 0) {
+                if((cewekID == 0) || (cewekID > 9)) {
                     mAvailable[i]++;
                     builder[pos] = '0';
                 } else {
