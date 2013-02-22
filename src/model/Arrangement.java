@@ -56,16 +56,16 @@ public class Arrangement {
   //                              System.out.print(k);
                                 if(Iboy.getActiveIboy().isUangSAvailable(b.getHarga(), k)
                                         &&
-                                        b.isPurchaseable(i)
+                                        b.isPurchaseable(k/10)
                                         &&
-                                        (mAvailableS[i] > 0)
+                                        (mAvailableS[k/10] > 0)
                                         &&
                                         (builder[k] == '0')) {
 //                                    System.out.println();
                                     Iboy.getActiveIboy().useUangS(b.getHarga(), k);
                                     len--;
                                     k++;
-                                    mAvailableS[i]--;
+                                    mAvailableS[k/10]--;
                                     break;
                                 }
                             }
@@ -78,9 +78,9 @@ public class Arrangement {
                                 for (; k < pos; k++) {
                                     if(Iboy.getActiveIboy().isUangAvailable(b.getHarga(), k)
                                             &&
-                                            b.isPurchaseable(i)
+                                            b.isPurchaseable(k/10)
                                             &&
-                                            (mAvailable[i] > 0)
+                                            (mAvailable[k/10] > 0)
                                             &&
                                             (builder[k] == '0')
                                             ) {
@@ -88,7 +88,7 @@ public class Arrangement {
                                         builder[k] = b.getBarangID();
                                         b.purchase(k / 10);
                                         k++;
-                                        mAvailable[i]--;
+                                        mAvailable[k/10]--;
                                         break;
                                     }
                                 }
@@ -221,15 +221,15 @@ public class Arrangement {
                             for (; k < pos; k++) {
                                 if(Iboy.getActiveIboy().isUangSAvailable(b.getHarga(), k)
                                         &&
-                                        b.isPurchaseable(i)
+                                        b.isPurchaseable(k/10)
                                         &&
-                                        (mAvailableS[i] > 0)
+                                        (mAvailableS[k/10] > 0)
                                         &&
                                         (builder[k] == '0')) {
                                     Iboy.getActiveIboy().useUangS(b.getHarga(), k);
                                     len--;
                                     k++;
-                                    mAvailableS[i]--;
+                                    mAvailableS[k/10]--;
                                     break;
                                 }
                             }
@@ -242,9 +242,9 @@ public class Arrangement {
                                 for (; k < pos; k++) {
                                     if(Iboy.getActiveIboy().isUangAvailable(b.getHarga(), k)
                                             &&
-                                            b.isPurchaseable(i)
+                                            b.isPurchaseable(k/10)
                                             &&
-                                            (mAvailable[i] > 0)
+                                            (mAvailable[k/10] > 0)
                                             &&
                                             (builder[k] == '0')
                                             ) {
@@ -252,7 +252,7 @@ public class Arrangement {
                                         builder[k] = b.getBarangID();
                                         b.purchase(k / 10);
                                         k++;
-                                        mAvailable[i]--;
+                                        mAvailable[k/10]--;
                                         break;
                                     }
                                 }
