@@ -91,6 +91,8 @@ public class GeneticAlgo {
     
     
     private static void crossingOver() {
+        int crosspoint;
+        
         ArrayList<Arrangement> children = new ArrayList<Arrangement>();
         for (int i = 0; i < populasi.size(); i++) {
             for (int j = i + 1; j < populasi.size(); j++) {
@@ -98,19 +100,26 @@ public class GeneticAlgo {
                 children.add(new Arrangement(populasi.get(j).getArrangement().substring(0)));
             }
         }
+        
+        for(Arrangement ar: children) {
+            ar.validate();
+        }
+        
         for (int i = 0; i < (children.size() / 2); i++) {
             int x = (2 * i);
             int y = (2 * i) + 1;
-            children.get(x).crossOver(children.get(y));
+            crosspoint = children.get(x).crossOver(children.get(y));
+            //children.get(x).mutation(crosspoint);
+            //children.get(y).mutation(crosspoint);
         }
 
         /**
          * mutasinya ditaruh sini ya
-         */
+         
 
         for(Arrangement ar: children) {
             ar.validate();
-        }
+        }*/
 
         Collections.sort(children, new ArrangementComparator());
 

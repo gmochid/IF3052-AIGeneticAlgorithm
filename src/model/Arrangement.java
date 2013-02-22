@@ -169,8 +169,14 @@ public class Arrangement {
     
     public void mutation(Integer crossingPoint){
         /*STRATEGY :
-         *  1. MODIFY FROM CROSSING POINT TO REVALIDATE THE REST OF THE CHILD ARRANGEMENT
-         *  2. MODIFY PURCHASING STRATEGY BY REPLACING THINGS TO BUY OR GIRLS TO DATE
+         *  1. MODIFY FROM CROSSING POINT TO REPLACE/OMIT ALL UNFEASIBLE DATING CAUSED BY LACK OF ENERGY
+         *      a. BY FETCHING IT TO OTHER CANDIDATES WITH LOW ENERGY REQUIREMENT
+         *      b. BY SETTING IT TO IDLE IF IT DIDN'T WORK
+         *      c. BY RESETTING ALL BUYING PREREQUISITES ACTIVITIES TO IDLE
+         *  2. MODIFY FROM CROSSING POINT TO REBUY ALL THE PREREQUISITES
+         *      a. BY BUYING THE NOW-REQUIRED PREREQUISITES
+         *  3. MODIFY FROM CROSSING POINT TO OMIT ALL UNFEASIBLE DATING CAUSED BY LACK OF PREREQUISITES NEEDED
+         *      a. BY OMITING ALL THE CANDIDATES THAT HAVEN'T GOT THEIR REQUIREMENT READY
          */
         Character karakter;
         Integer cEnergy, cEnergyS;
@@ -185,7 +191,7 @@ public class Arrangement {
          */
         cMoney = 200000;
         for (int i = 0; i < crossingPoint; i++){
-            if ((i > 0) && (i % 10) == 0){  //ganti hari
+            if ((i > 0) && (i % 10 == 0)){  //ganti hari
                 cMoney += 50000;
             }
             karakter = this.mArrangement.charAt(i);
@@ -196,6 +202,7 @@ public class Arrangement {
                 items.add(Barang.getBarang(karakter));
             }
         }
+        System.out.println("Hingga crosspoint, uang yang tersisa: "+cMoney);
         
         /*
          * cari tahu energi sekarang, mulai iterasi dari awal hari terdekat 
@@ -204,7 +211,7 @@ public class Arrangement {
         cEnergy = 100;
         for (int i = (int)(crossingPoint / 10) * 10; i < crossingPoint; i++){
             karakter = this.mArrangement.charAt(i);
-            if (karakter == (int)'0'){
+            if (karakter == '0'){
                 //do nothing
             } else if (karakter - (int)'A' < 0){    //jika nilainya 0-9 (suatu cewek)
                 cEnergy -= Cewek.getCewek(karakter - (int)'0').getEnergiHabis();                            //kurangi energi sesuai cewek
@@ -215,37 +222,42 @@ public class Arrangement {
                 //do nothing    
             }
         }
+        System.out.println("Hingga crosspoint, energi yang tersisa: "+cEnergy);
+        System.out.print("Hingga crosspoint, barang yang tersisa: ");
+        for (Barang a : items){
+            System.out.print(a.getBarangID()+" ");
+        }
         
         /*
          * pada state ini telah didapat :
          * - energi sekarang (cEnergy), 
          * - uang sekarang (cMoney), 
-         * - daftar item yang masih dipunyai (Items)
+         * - daftar item yang masih dipunyai (items)
          */
         cEnergyS = cEnergy;     //simpan dulu nilainya untuk simulasi
         cMoneyS = cMoney;       //simpan dulu nilainya untuk simulasi
-        
-        /*FIRST ATTEMPT : MODIFY CEWEK YANG AKAN DIAPEL*/
+        //cari cewek penyerap energi terendah di antara semua kandidat
+        int minSucker = 1; 
+        for (int m = 1; m < Cewek.getTotalCewek(); m++){
+            if (Cewek.getCewek(m).getEnergiHabis() < Cewek.getCewek(m+1).getEnergiHabis()){
+                minSucker = m;
+            } else {
+                minSucker = m+1;
+            }
+        }
+        System.out.println("Cewek dengan energi paling rendah: "+Cewek.getCewek(minSucker).getCewekID());
+            
+        //FIRST ATTEMPT : MODIFY CEWEK YANG AKAN DIAPEL
         StringBuilder sbArrangement = new StringBuilder(this.mArrangement);
         for (int i = crossingPoint; i < this.mArrangement.length(); i++){
-            if ((i > 0) && (i % 10) == 0){  //bila ganti hari
-                cMoneyS += 50000;
+            if ((i > 0) && (i % 10 == 0)){  //bila ganti hari
                 cEnergyS = 100;
             }
             
             karakter = this.mArrangement.charAt(i);
             keyCewek = karakter - (int)'0';
             
-            //cari cewek penyerap energi terendah di antara semua kandidat
-            int minSucker = 1; 
-            for (int m = 1; m < Cewek.getTotalCewek(); m++){
-                if (Cewek.getCewek(m).getEnergiHabis() < Cewek.getCewek(m+1).getEnergiHabis()){
-                    minSucker = m;
-                } else {
-                    minSucker = m+1;
-                }
-            }
-            if (karakter - (int)'A' < 0){   //jika nilainya 0-9 (suatu cewek)
+            if ((karakter - (int)'A' < 0) && (keyCewek != 0)){   //jika nilainya 1-9 (suatu cewek)
                 if (cEnergyS < Cewek.getCewek(keyCewek).getEnergiHabis()){      //tidak bisa nge-date cewek ini karena alasan energy
                     if (cEnergyS < Cewek.getCewek(minSucker).getEnergiHabis()){ //tidak bisa nge-date cewek penyerap energy terendah juga, ckck
                         sbArrangement.setCharAt(i, '0');                        //batal dating
@@ -254,39 +266,46 @@ public class Arrangement {
                         //kumpulkan prerequisite cewek ini kalau belum ada
                         for (int j = 0; j < Cewek.getCewek(minSucker).getPrerequisite().size(); j++){
                             if (!items.contains(Cewek.getCewek(minSucker).getPrerequisite().get(j))){
-                                itemsToBuy.add(Cewek.getCewek(minSucker).getPrerequisite().get(j));
+                                itemsToBuy.add(Cewek.getCewek(minSucker).getPrerequisite().get(j)); //masukkan ke daftar yang harus dibeli
                             }
                         }
                         cEnergyS -= Cewek.getCewek(minSucker).getEnergiHabis(); //kurangi energi sekarang
                     }
                 } else {    
-                    //kumpulkan prerequisite cewek ini kalau belum ada
+                    //energinya cukup buat nge date, sekarang kumpulkan prerequisite cewek ini kalau belum ada
                     for (int j = 0; j < Cewek.getCewek(keyCewek).getPrerequisite().size(); j++){
                         if (!items.contains(Cewek.getCewek(keyCewek).getPrerequisite().get(j))){
-                            itemsToBuy.add(Cewek.getCewek(keyCewek).getPrerequisite().get(j));
+                            itemsToBuy.add(Cewek.getCewek(keyCewek).getPrerequisite().get(j));  //masukkan ke daftar yang harus dibeli
                         }
                     }
                     cEnergyS -= Cewek.getCewek(keyCewek).getEnergiHabis(); //kurangi energi sekarang
                 }
             } else {    //jika nilainya A-Z (suatu item)    
-                sbArrangement.setCharAt(i, '0');    //reset Barang-barang yang ada    
+                sbArrangement.setCharAt(i, '0');    //aktivitas membeli barang diubah menjadi aktivitas idle    
             }
         }
         //setelah selesai dimodifikasi mArrangement nya sampai karakter terakhir
         mArrangement2 = sbArrangement.toString();
+        System.out.println("Hasil first attempt: "+mArrangement2);
         
-        /*SECOND ATTEMPT : BELI BARANG2 UNTUK SUSUNAN CEWEK BARU*/
+        //SECOND ATTEMPT : BELI BARANG2 UNTUK SUSUNAN CEWEK BARU
         StringBuilder sbArrangement2 = new StringBuilder(mArrangement2);
         int idx = 0;
-        while (idx < itemsToBuy.size()){
-            for (int j = crossingPoint; j < mArrangement2.length(); j++){
-                //mau beli barang sesuai aturan FIFO 
-                if ((mArrangement2.charAt(j) == '0') && (itemsToBuy.get(idx).isPurchaseable(j))){    //jika ada yang kosong dan barang bisa dibeli
+        while (idx < itemsToBuy.size()){                                    //selama masih ada barang yang perlu dibeli
+            for (int i = crossingPoint; i < mArrangement2.length(); i++){   //lakukan iterasi jam
+                if ((i > 0) && (i % 10 == 0)){                              //jika ganti hari
+                    cMoneyS += 50000; 
+                    for (int j = 0; j < Barang.getTotalBarang(); j++){      //restock semua barang
+                        Barang.getBarang(j).reset();
+                    }
+                }
+                //mau beli barang sesuai aturan FIFO
+                if ((mArrangement2.charAt(i) == '0') && (itemsToBuy.get(idx).isPurchaseable(i%10))){    //jika ada yang kosong dan barang bisa dibeli
                     if (cMoneyS < Barang.getBarang(itemsToBuy.get(idx).getBarangID()).getHarga()){  //barang tidak bisa dibeli
                         //do nothing
                     } else {
-                        sbArrangement2.setCharAt(j, itemsToBuy.get(idx).getBarangID());                  //set karakternya 
-                        itemsToBuy.get(idx).purchase(j);
+                        sbArrangement2.setCharAt(i, itemsToBuy.get(idx).getBarangID());                  //set karakternya 
+                        itemsToBuy.get(idx).purchase(i%10);
                         cMoneyS -= Barang.getBarang(itemsToBuy.get(idx).getBarangID()).getHarga();
                         idx++;
                     }
@@ -296,32 +315,40 @@ public class Arrangement {
             }
         }
         mArrangement3 = sbArrangement2.toString();
+        System.out.println("Hasil second attempt: "+mArrangement3);
         
-        /*THIRD ATTEMPT : CEK ULANG APA SAAT NGAPEL CEWEK BARANG SUDAH ADA*/
+        //THIRD ATTEMPT : CEK ULANG APA SAAT NGAPEL CEWEK BARANG SUDAH ADA
         StringBuilder sbArrangement3 = new StringBuilder(mArrangement3);
         boolean isPrerequisiteExist;
         for (int i = crossingPoint; i < mArrangement3.length(); i++){
-            if ((i > 0) && (i % 10) == 0){  //bila ganti hari
+            if ((i > 0) && (i % 10 == 0)){  //bila ganti hari
                 cMoney += 50000;
                 cEnergy = 100;
+                Cewek.resetAll();               //reset mCurrent waktu semua cewek
             }
             
             karakter = this.mArrangement.charAt(i);
             keyCewek = karakter - (int)'0';
             isPrerequisiteExist = true;
                     
-            if (karakter - (int)'A' < 0){   //jika nilainya 0-9 (suatu cewek)
+            if ((karakter - (int)'A' < 0) && (keyCewek != 0)){   //jika nilainya 0-9 (suatu cewek)
                 for (int j = 0; j < Cewek.getCewek(keyCewek).getPrerequisite().size(); j++){
-                    if (!items.contains(Cewek.getCewek(keyCewek).getPrerequisite().get(j))){
-                        isPrerequisiteExist = false;
+                    if (!items.contains(Cewek.getCewek(keyCewek).getPrerequisite().get(j))){    
+                        isPrerequisiteExist = false;    //bila ada barang yang belum tersedia
                     }
                 }
                 if (!isPrerequisiteExist){   
                     //prerequisite belum ada, kemungkinan karena baru mau dibeli sesudah apel
                     //artinya tidak ada cukup waktu luang untuk beli sebelum ngapel cewek nya tadi
+                    //kebelinya sesudah apel
                     sbArrangement3.setCharAt(i, '0');   //batalkan dating
                 } else {
-                    cEnergy -= Cewek.getCewek(keyCewek).getEnergiHabis();
+                    if (Cewek.getCewek(keyCewek).isDateable(i)){    //cek seandainya dia mCurrentWaktu nya sudah habis
+                       Cewek.getCewek(keyCewek).dateIboy();         //kurangi mCurrentWaktu
+                       cEnergy -= Cewek.getCewek(keyCewek).getEnergiHabis();
+                    } else {
+                       sbArrangement3.setCharAt(i, '0');            //batalkan dating
+                    }
                 }
             } else {    //jika nilainya A-Z (suatu item)
                 //do nothing
@@ -329,6 +356,7 @@ public class Arrangement {
             }
         }
         mArrangement = sbArrangement3.toString();
+        System.out.println("Hasil third attempt: "+mArrangement);
     }
     
     private void resetSimulation() {
