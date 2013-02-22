@@ -39,6 +39,11 @@ public class Cewek {
     public static Integer getTotalCewek() {
         return cewekLib.size();
     }
+    public static void resetAll(){
+        for (Cewek cewek : cewekLib.values()) {
+            cewek.reset();
+        }
+    }
 
     /* METHOD */
     public void reset() {
@@ -55,7 +60,7 @@ public class Cewek {
         return AB;
     }
     public Boolean isDateable(Integer time) {
-        return (mCurrentWaktu > 0) && (mJadwal.charAt(time) == '1');
+        return (mCurrentWaktu > 0) && (mJadwal.charAt(time % 70) == '1');
     }
 
     /* GETTER and SETTER */

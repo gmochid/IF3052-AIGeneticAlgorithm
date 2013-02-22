@@ -21,10 +21,11 @@ public class Iboy {
         mEnergi = energi;
         mMinggu = minggu;
         mCurrentUang = new Integer[minggu * 7 * 10];
-        mCurrentUang[0] = modalUang;
+        mCurrentUang[0] = mModalUang;
+        mTambahanUang = tambahanUang;
         for (int i = 1; i < (minggu * 7 * 10); i++) {
             if(i % 10 == 0) {
-                mCurrentUang[i] = mCurrentUang[i-1] + tambahanUang;
+                mCurrentUang[i] = mCurrentUang[i-1] + mTambahanUang;
             } else {
                 mCurrentUang[i] = mCurrentUang[i-1];
             }
@@ -43,6 +44,18 @@ public class Iboy {
     /* METHOD */
     public void reset() {
         mCurrentEnergy = mEnergi;
+        mCurrentUang[0] = mModalUang;
+        for (int i = 1; i < (mMinggu * 7 * 10); i++) {
+            if(i % 10 == 0) {
+                mCurrentUang[i] = mCurrentUang[i-1] + mTambahanUang;
+            } else {
+                mCurrentUang[i] = mCurrentUang[i-1];
+            }
+        }
+    }
+
+    public void nextDay() {
+        mCurrentEnergy = mEnergi;
     }
 
     public void resetSimulation() {
@@ -52,6 +65,9 @@ public class Iboy {
 
     public Boolean isCewekDateable(Integer cewekID, Integer time) {
         Cewek cewek = Cewek.getCewek(cewekID);
+        if(cewekID > 5) {
+            System.out.println("--" + cewekID);
+        }
         return (mCurrentEnergy >= cewek.getEnergiHabis()) && (cewek.isDateable(time));
     }
 
@@ -75,7 +91,7 @@ public class Iboy {
     }
     public Boolean isUangAvailable(Integer amount, Integer time) {
         for (int i = time; i < (mMinggu * 7 * 10); i++) {
-            if((mCurrentUangS[i] - amount) < 0) {
+            if((mCurrentUang[i] - amount) < 0) {
                 return false;
             }
         }
