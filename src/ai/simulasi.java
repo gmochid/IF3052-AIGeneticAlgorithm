@@ -15,7 +15,9 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import model.Barang;
 import model.Cewek;
+import model.Iboy;
 
 /**
  *
@@ -34,7 +36,12 @@ public class simulasi extends screen{
     
     private static int day;
     private static int time;
-   
+    private static int energy;
+    private static int curEnergy;
+    private static int Money;
+    private static int Gaji;
+    private static int Love;
+    
     static public int iterator;
     
     public simulasi(int width,int height, String S) {
@@ -49,7 +56,12 @@ public class simulasi extends screen{
         girl = '0';
         react = false;
         buy = false;
-        System.out.println(S);
+        Love = 0;
+        Iboy iboy = Iboy.getActiveIboy();
+        Money = iboy.getModalUang();
+        Gaji = iboy.getTambahanUang();
+        energy = iboy.getEnergi();
+        curEnergy = energy;
     }
     
     public void update(float elapsedTime) {
@@ -59,6 +71,16 @@ public class simulasi extends screen{
         
         int x = p.x;
         int y = p.y;
+        
+        //IF SCHEDULE FINISHED
+        if (iterator == arrangement.length()) {
+            try {
+                gameLoop.sleep(0xc350);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(simulasi.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
         //IF IBOY ARRIVED--------------------------------------------
         if ((player.getX()==y)&&(player.getY()==x)) {
             char c = arrangement.charAt(iterator);
@@ -70,12 +92,23 @@ public class simulasi extends screen{
                 for (int i = 0; i < userBarang.length; i++) {
                    listItem.useItem(userBarang[i]);
                 }
+                curEnergy = curEnergy - useEnergy(c);
+                Love = Love + muchLove(c);
+                repaint();
+                try {
+                    gameLoop.sleep(2000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(simulasi.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
             //IF IBOY WENT TO THE MALL
             if ((c >= 'A')&&(c <= 'Z')){
                 listItem.addItem(c);
                 buy = true;
+                repaint();
                 
+                Barang item = Barang.getBarang(c);
+                Money = Money - item.getHarga();
             }
             
             iterator = iterator + 1;
@@ -95,6 +128,8 @@ public class simulasi extends screen{
                 player.reset();
                 day++;
                 time=10;
+                curEnergy = energy;
+                Money = Money + Gaji;
                 super.update(elapsedTime);
             } else {
                 time++;
@@ -133,6 +168,16 @@ public class simulasi extends screen{
             barang[i] = cewek.getPrerequisite().get(i).getBarangID();
         }
         return barang;
+    }
+    
+    public int useEnergy (char c) {
+        Cewek cewek = Cewek.getCewek((int)c - (int)'0');
+        return cewek.getEnergiHabis();
+    }
+    
+    public int muchLove (char c) {
+     Cewek cewek = Cewek.getCewek((int)c - (int)'0');
+        return cewek.getEnlightenment();   
     }
     
     public Point searchHouse (char c) {
@@ -188,42 +233,64 @@ public class simulasi extends screen{
         peta.paint(g);
         listItem.renders(g);
         
+        //DRAW GIRL
         if (react) {
             paintGirl(g, girl);
             player.drawHeart(g);
         } else 
+        //DRAW BUY ITEM
         if (buy) {
             player.drawDollar(g);
         } else {
             player.render(g);
         }
         
-        g.setFont(new Font("Century Gothic", Font.BOLD, 28));
-        g.setColor(Color.WHITE);
-        g.drawString("Day : "+day, 600, 540);
-        g.drawString("Time : "+time+".00", 600, 570);
+        //DRAW ENERGY BAR
+        g.setColor(Color.red);
+        g.fillRect((int)(player.getX()*50) + 10, (int)(player.getY()*50) - 2, 30, 5);
+        g.setColor(Color.green);
+        g.fillRect((int)(player.getX()*50) + 10, (int)(player.getY()*50) - 2, (int)(((float)curEnergy/energy)*30), 5);
         
+        
+        //DRAW DATE & TIME
+        g.setFont(new Font("Century Gothic", Font.BOLD, 22));
+        g.setColor(Color.black);
+        g.drawString("Day : "+day, 520, 35);
+        g.drawString("Time : "+time+".00", 640, 35);
+        g.drawString(""+Money, 690, 73);
+        g.drawString(""+Love, 690, 115);
+        
+        
+        //DRAW NIGHT
         if (time == 20) {
             paintBlack(g);
         }
     }
     
+    
     public void paintGirl(Graphics canvas, char c) {
         Graphics2D g = (Graphics2D) canvas;
         BufferedImage img = null;
+        BufferedImage face = null;
         try {
             img = ImageIO.read(new File("assets/girl/" + c + ".png"));
+            face = ImageIO.read(new File("assets/girl/" + c + "a.png"));
         } catch (IOException e) {
             }
-        if (c=='1'||c=='6'||c=='9' ) {
-            g.drawImage(img, null,((int)player.getX()*50)-15, ((int)player.getY()*50)-15);
+        if (c=='1'|| c == '7' || c=='9' ) {
+            g.drawImage(img, null,((int)player.getX()*50)-15, ((int)player.getY()*50)-20);
+            g.drawImage(face, null,((int)player.getX()*50)-80, ((int)player.getY()*50)-80);
         }
         else 
             if (c=='5'||c=='8') {
                 g.drawImage(img, null,((int)player.getX()*50+30), ((int)player.getY()*50)-15);
+                g.drawImage(face, null,((int)player.getX()*50)+10, ((int)player.getY()*50)-80);
             }
         else 
-        { g.drawImage(img, null,((int)player.getX()*50), ((int)player.getY()*50)-40); }
+        { 
+            g.drawImage(img, null,((int)player.getX()*50), ((int)player.getY()*50)-40); 
+            g.drawImage(face, null,((int)player.getX()*50)-60, ((int)player.getY()*50)-80);
+        }
     }
     
     public void paintBlack(Graphics canvas) {
@@ -235,15 +302,5 @@ public class simulasi extends screen{
             }
         g.drawImage(img, null, 0, 0);
     }
-    
-    static public int getDay() {
-        System.out.println(day);
-        return day;
-    }
-    
-    static public int getTime() {
-        System.out.println(time);
-        return time;
-    }
-}
 
+}

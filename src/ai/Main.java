@@ -26,7 +26,6 @@ public class Main {
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JPanel p = new JPanel();
         String S = GeneticAlgo.GA();
-        System.out.println(S);
         screen display = new simulasi(868, 600, S);
         
         p.add(display);
