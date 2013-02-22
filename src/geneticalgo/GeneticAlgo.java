@@ -28,7 +28,7 @@ public class GeneticAlgo {
 
         Logger.log("Initializing population...");
         initializePopulation();
-        Logger.log("Population initialized");
+        Logger.log("Population initialized. See 'Genes' tab for details.");
         /*
         populasi = new ArrayList<Arrangement>();
         for (int i = 0; i < 5; i++) {
@@ -46,6 +46,7 @@ public class GeneticAlgo {
         Logger.log2("\n");
 
         Logger.log("Crossing over...");
+        long start = System.currentTimeMillis();
         
         Logger.log2("Crossovers:");
         int i=0;
@@ -53,12 +54,19 @@ public class GeneticAlgo {
         while(i<=100){
             crossingOver();
             i++;
+            
             Logger.log2(populasi.get(0).getFinalArrangement() + " " + populasi.get(0).calculateTotalEnlightenment());
-        }
-        Logger.log2("\n");
+            Logger.log2("");
 
+        }
+        
         Logger.log2("Final:");
         Logger.log2(populasi.get(0).getFinalArrangement() + " " + populasi.get(0).calculateTotalEnlightenment());
+
+        long now = System.currentTimeMillis();
+        long delta = now - start;
+        Logger.log("Crossing over took " + String.valueOf(delta) + " ms");
+        
         return populasi.get(0).getFinalArrangement();
     }
 
