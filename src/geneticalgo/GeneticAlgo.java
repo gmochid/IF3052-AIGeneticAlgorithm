@@ -58,6 +58,8 @@ public class GeneticAlgo {
             i++;
             Logger.log2(populasi.get(0).getFinalArrangement() + " " + populasi.get(0).calculateTotalEnlightenment());
             Logger.log2("");
+            if(populasi.get(0).calculateTotalEnlightenment() > 200)
+                break;
         }
         
         Logger.log2("Final:");
