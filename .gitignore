@@ -1,4 +1,8 @@
 nbproject/
+nbproject/build-impl.xml
+nbproject/genfiles.properties
+nbproject/private/private.properties
+build/classes/.netbeans_update_resources
 *.class
 # Package Files #
 *.jar

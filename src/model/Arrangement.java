@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 import java.util.Random;
+import log.Logger;
 
 /**
  *
@@ -133,7 +134,15 @@ public class Arrangement {
         return total;
     }
     
+<<<<<<< HEAD
     public Integer crossOver(Arrangement a){
+=======
+    public void crossOver(Arrangement a){
+        Logger.log2(mArrangement);
+        Logger.log2("                                              X");
+        Logger.log2(a.mArrangement);
+        
+>>>>>>> origin/gici
         int cuttingValue1 = (int)(this.calculateTotalEnlightenment() * crossFactor);
         int cuttingValue2 = (int)(a.calculateTotalEnlightenment() * crossFactor);
         int subtotal = 0;
@@ -158,6 +167,15 @@ public class Arrangement {
                 i++;
             }
         }
+        
+        String lls = "";
+        for (int iii = 0; iii < i - 1; iii++) {
+            lls += " ";
+        }
+        lls += "|| (" + i + ")";
+        Logger.log2(lls);
+        Logger.log2("");
+        
         tail1 = this.mArrangement.substring(i);
         tail2 = a.mArrangement.substring(i);
         /* Swapping */
