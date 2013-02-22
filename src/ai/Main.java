@@ -10,6 +10,7 @@ import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import log.Logger;
 
 /**
  *
@@ -22,6 +23,10 @@ public class Main {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        
+        // Summon Logger
+        Logger.summonWindow();
+        
         JFrame f = new JFrame("Iboy");
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JPanel p = new JPanel();
