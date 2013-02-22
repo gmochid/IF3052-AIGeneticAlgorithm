@@ -10,6 +10,7 @@ import java.util.Random;
 import java.util.Scanner;
 import model.*;
 import parser.Parser;
+import log.Logger;
 /**
  *
  * @author Yulianti Oenang
@@ -19,10 +20,17 @@ public class GeneticAlgo {
     private static ArrayList<Arrangement> populasi;
     
     public static String GA() {
+        Logger.log("Loading general file...");
         Parser.parseGeneralFile("file.txt");
+        Logger.log("General file loaded.");
+        
+        Logger.log("Loading schedule file...");
         Parser.parseScheduleFile("file2.txt");
+        Logger.log("Schedule file loaded.");
 
+        Logger.log("Initializing population...");
         initializePopulation();
+        Logger.log("Population initialized. See 'Genes' tab for details.");
         /*
         populasi = new ArrayList<Arrangement>();
         for (int i = 0; i < 5; i++) {
@@ -32,23 +40,33 @@ public class GeneticAlgo {
         }
          * 
          */
+        Logger.log2("Initial population:");
         for (Arrangement a: populasi) {
             a.validate();
-            System.out.println(a.getArrangement() + " " + a.calculateTotalEnlightenment());
+            Logger.log2(a.getArrangement() + " " + a.calculateTotalEnlightenment());
         }
+        Logger.log2("\n");
 
+        Logger.log("Crossing over...");
+        long start = System.currentTimeMillis();
+        
+        Logger.log2("Crossovers:");
         int i=0;
         // SAMPE BERHENTI
         while(i<=100){
             crossingOver();
             i++;
-            System.out.println(populasi.get(0).getFinalArrangement() + " " + populasi.get(0).calculateTotalEnlightenment());
-            if(populasi.get(0).calculateTotalEnlightenment() > 180) {
-                break;
-            }
+            Logger.log2(populasi.get(0).getFinalArrangement() + " " + populasi.get(0).calculateTotalEnlightenment());
+            Logger.log2("");
         }
+        
+        Logger.log2("Final:");
+        Logger.log2(populasi.get(0).getFinalArrangement() + " " + populasi.get(0).calculateTotalEnlightenment());
 
-        System.out.println("Final : " + populasi.get(0).getFinalArrangement() + " " + populasi.get(0).calculateTotalEnlightenment());
+        long now = System.currentTimeMillis();
+        long delta = now - start;
+        Logger.log("Crossing over took " + String.valueOf(delta) + " ms");
+        
         return populasi.get(0).getFinalArrangement();
     }
 
